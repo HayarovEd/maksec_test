@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">maksec_test</string>
+    <string name="call_blocker_title">Call Blocker MVP</string>
+    <string name="label_call_screening">Call Screening Role</string>
+    <string name="label_overlay_permission">Display Over Other Apps</string>
+    <string name="btn_request_role">Request Call Screening Role</string>
+    <string name="btn_request_overlay">Request Overlay Permission</string>
+    <string name="status_setup_complete">Everything is set up!</string>
+    <string name="status_not_supported">Not Supported</string>
+    <string name="status_enabled">ENABLED</string>
+    <string name="status_disabled">DISABLED</string>
+    <string name="unknown_number">Unknown</string>
+    <string name="incoming_call_format">Incoming Call: %1$s</string>
+    <string name="btn_close">Close</string>
 </resources>
