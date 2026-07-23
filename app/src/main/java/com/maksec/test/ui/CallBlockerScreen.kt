@@ -93,7 +93,13 @@ fun CallBlockerScreen(modifier: Modifier = Modifier) {
             }) {
                 Text(stringResource(R.string.btn_request_role))
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.hint_request_role),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         if (!canDrawOverlays) {
@@ -106,6 +112,12 @@ fun CallBlockerScreen(modifier: Modifier = Modifier) {
             }) {
                 Text(stringResource(R.string.btn_request_overlay))
             }
+            Text(
+                text = stringResource(R.string.hint_request_overlay),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
 
         if (isRoleHeld && canDrawOverlays) {
