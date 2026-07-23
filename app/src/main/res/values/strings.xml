@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">maksec_test</string>
+    <string name="call_blocker_title">Блокировщик звонков</string>
+    <string name="label_call_screening">Роль фильтрации вызовов</string>
+    <string name="label_overlay_permission">Отображение поверх окон</string>
+    <string name="btn_request_role">Запросить роль фильтрации</string>
+    <string name="btn_request_overlay">Разрешить наложение</string>
+    <string name="status_setup_complete">Всё настроено!</string>
+    <string name="status_not_supported">Не поддерживается</string>
+    <string name="status_enabled">ВКЛЮЧЕНО</string>
+    <string name="status_disabled">ВЫКЛЮЧЕНО</string>
+    <string name="unknown_number">Неизвестный номер</string>
+    <string name="incoming_call_format">Входящий звонок: %1$s</string>
+    <string name="btn_close">Закрыть</string>
+
+    <string name="hint_request_role">В списке выберите \"maksec_test\" и нажмите \"Установить по умолчанию\"</string>
+    <string name="hint_request_overlay">Найдите \"maksec_test\" и включите тумблер \"Разрешить\"</string>
 </resources>
