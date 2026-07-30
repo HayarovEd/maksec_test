@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,17 +20,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maksec.test.R
 
 // Цвета из макета
-val PurplePrimary = Color(0xFF6A669D)
-val PurpleSecondary = Color(0xFF8581B4)
-val LightGray = Color(0xFFF0F0F0)
-val TextGray = Color(0xFF888888)
+val PurpleMain = Color(0xFF6A669D)
+val DarkBackground = Color(0xFFF5F5F5)
+val TabBackground = Color(0xFFF2F2F7)
+val TabTextSelected = Color(0xFF6A669D)
+val TabTextUnselected = Color(0xFF8E8E93)
+val DialNumberColor = Color(0xFF3A3A3C)
 val BadgeRed = Color(0xFFFF3B30)
 
 class MainActivity : ComponentActivity() {
@@ -45,118 +46,130 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DialScreen(
-    modifier: Modifier = Modifier,
-) {
-    val enteredNumber = remember { mutableStateOf("") }
+fun DialScreen() {
+    val enteredNumber = remember { mutableStateOf("89227246484") }
 
     Scaffold(
         topBar = {
-            Row(
-                modifier = modifier
-                    .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+            Column(
+                modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .background(Color.White)
                     .statusBarsPadding()
-                    .padding(vertical = 10.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = { /* Действие при нажатии на кнопку "Назад" */ },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = Color.Transparent,
-                    ),
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.arrow_back),
-                        contentDescription = "Back",
-                        tint = TextGray,
-                        modifier = Modifier.size(24.dp)
+                    IconButton(
+                        onClick = { },
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.arrow_back),
+                            contentDescription = "Back",
+                            tint = Color.LightGray
+                        )
+                    }
+                    Text(
+                        text = "Набор номера",
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "Позвонить",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.width(24.dp)) // Баланс для центровки
             }
         },
         bottomBar = {
             BottomNavBar()
-        }
+        },
+        containerColor = DarkBackground
     ) { paddingValues ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Tabs
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp)
-                    .clip(RoundedCornerShape(16.dp))
+                    .height(64.dp)
+                    .clip(RoundedCornerShape(24.dp))
                     .background(Color.White)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TabItem(text = "Набор", isSelected = true, modifier = Modifier.weight(1f))
-                TabItem(text = "История", isSelected = false, modifier = Modifier.weight(1f))
-                TabItem(text = "Контакты", isSelected = false, modifier = Modifier.weight(1f))
+                TabItem("Набор", isSelected = true, modifier = Modifier.weight(1f))
+                TabItem("История", isSelected = false, modifier = Modifier.weight(1f))
+                TabItem("Контакты", isSelected = false, modifier = Modifier.weight(1f))
             }
 
-            // 3. Цифровая клавиатура (Grid)
+            Spacer(modifier = Modifier.weight(0.5f))
+
+            // Entered Number
+            Text(
+                text = enteredNumber.value,
+                fontSize = 54.sp,
+                fontWeight = FontWeight.Normal,
+                color = DialNumberColor,
+                letterSpacing = 1.sp
+            )
+
+            Spacer(modifier = Modifier.weight(0.5f))
+
+            // Dial Pad
             val keys = listOf(
-                "1", "2", "3",
-                "4", "5", "6",
-                "7", "8", "9",
-                "0", "#", "*"
+                listOf("1", "2", "3"),
+                listOf("4", "5", "6"),
+                listOf("7", "8", "9"),
+                listOf("0", "#", "*")
             )
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth()
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                keys.chunked(3).forEach { rowKeys ->
+                keys.forEach { row ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        horizontalArrangement = Arrangement.spacedBy(32.dp)
                     ) {
-                        rowKeys.forEach { key ->
+                        row.forEach { key ->
                             DialKey(key = key, onClick = { enteredNumber.value += key })
                         }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.weight(0.5f))
 
-            // 4. Кнопка вызова
+            // Call Button
             Button(
-                onClick = { /* Действие вызова */ },
-                colors = ButtonDefaults.buttonColors(containerColor = PurplePrimary),
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(containerColor = PurpleMain),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .height(56.dp)
+                    .fillMaxWidth()
+                    .height(64.dp)
             ) {
                 Text(
                     text = "Вызов",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
                     color = Color.White
                 )
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // 5. Нижняя навигация
-
+            
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -165,17 +178,21 @@ fun DialScreen(
 fun TabItem(text: String, isSelected: Boolean, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .height(44.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (isSelected) Color.White else Color.Transparent)
+            .fillMaxHeight()
+            .clip(RoundedCornerShape(16.dp))
+            .background(if (isSelected) Color.White else Color(0xFFF2F2F7))
+            .then(
+                if (isSelected) Modifier.border(2.dp, PurpleMain, RoundedCornerShape(16.dp))
+                else Modifier
+            )
             .clickable { },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
-            color = if (isSelected) PurplePrimary else TextGray,
-            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
-            fontSize = 15.sp
+            color = if (isSelected) PurpleMain else Color(0xFF8E8E93),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal
         )
     }
 }
@@ -184,66 +201,85 @@ fun TabItem(text: String, isSelected: Boolean, modifier: Modifier = Modifier) {
 fun DialKey(key: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(70.dp)
+            .size(82.dp)
             .clip(CircleShape)
-            .background(PurpleSecondary)
+            .background(PurpleMain)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = key,
             color = Color.White,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Light
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Normal
         )
     }
 }
 
 @Composable
 fun BottomNavBar() {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 16.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color(0xFFFAFAFA))
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceAround
+            .padding(start = 20.dp, end = 20.dp, bottom = 24.dp)
     ) {
-        NavIconItem("Дашборд", ImageVector.vectorResource(R.drawable.dash)) // Заглушка иконки
-        NavIconItem("Сервисы", ImageVector.vectorResource(R.drawable.services), isSelected = true)
-        NavIconItem("Позвонить", ImageVector.vectorResource(R.drawable.call))
-        NavIconItem("Угрозы", ImageVector.vectorResource(R.drawable.danger), badgeCount = 99)
-        NavIconItem("Профиль", ImageVector.vectorResource(R.drawable.profile))
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = Color.White,
+            shadowElevation = 8.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 12.dp, horizontal = 12.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                NavItem("Дашборд", R.drawable.dash, isSelected = false)
+                NavItem("Сервисы", R.drawable.services, isSelected = true)
+                NavItem("Позвонить", R.drawable.call, isSelected = false)
+                NavItem("Угрозы", R.drawable.danger, isSelected = false, badgeCount = 99)
+                NavItem("Профиль", R.drawable.profile, isSelected = false)
+            }
+        }
     }
 }
 
 @Composable
-fun NavIconItem(
+fun NavItem(
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    isSelected: Boolean = false,
+    iconRes: Int,
+    isSelected: Boolean,
     badgeCount: Int? = null
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable { }
+            .padding(horizontal = 4.dp, vertical = 2.dp)
+    ) {
         Box {
             Icon(
-                imageVector = icon,
+                imageVector = ImageVector.vectorResource(id = iconRes),
                 contentDescription = label,
-                tint = if (isSelected) PurplePrimary else TextGray,
-                modifier = Modifier.size(26.dp)
+                tint = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
+                modifier = Modifier.size(24.dp)
             )
             if (badgeCount != null) {
-                Badge(
-                    containerColor = BadgeRed,
-                    contentColor = Color.White,
+                Box(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
-                        .offset(x = 8.dp, y = (-8).dp)
+                        .offset(x = 12.dp, y = (-2).dp)
+                        .background(BadgeRed, CircleShape)
+                        .padding(horizontal = 4.dp, vertical = 1.dp)
                 ) {
                     Text(
-                        text = if (badgeCount > 99) "99+" else badgeCount.toString(),
-                        fontSize = 10.sp
+                        text = badgeCount.toString(),
+                        color = Color.White,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -252,8 +288,8 @@ fun NavIconItem(
         Text(
             text = label,
             fontSize = 10.sp,
-            color = if (isSelected) PurplePrimary else TextGray,
-            textAlign = TextAlign.Center
+            color = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
+            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
         )
     }
 }
@@ -261,10 +297,8 @@ fun NavIconItem(
 @Preview(
     showBackground = true,
     showSystemUi = true
-    )
+)
 @Composable
 fun DialScreenPreview() {
-    MaterialTheme {
-        DialScreen()
-    }
+    DialScreen()
 }
