@@ -1,15 +1,32 @@
 package com.maksec.test.screen
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,18 +44,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.maksec.test.R
+import com.maksec.test.ui.theme.BadgeRed
+import com.maksec.test.ui.theme.DarkBackground
+import com.maksec.test.ui.theme.DialNumberColor
+import com.maksec.test.ui.theme.PurpleMain
 
-// Цвета из макета
-val PurpleMain = Color(0xFF6A669D)
-val DarkBackground = Color(0xFFF5F5F5)
-val TabBackground = Color(0xFFF2F2F7)
-val TabTextSelected = Color(0xFF6A669D)
-val TabTextUnselected = Color(0xFF8E8E93)
-val DialNumberColor = Color(0xFF3A3A3C)
-val BadgeRed = Color(0xFFFF3B30)
+
+
 
 enum class TypeDialScreen(val nameRes: Int) {
-    DIAL(R.string.dial), HISTORY(R.string.history), CONTACTS(R.string.contacts)
+    DIAL(R.string.dial),
+    HISTORY(R.string.history),
+    CONTACTS(R.string.contacts)
 }
 
 @Composable
@@ -232,8 +249,9 @@ fun DialKey(key: String, onClick: () -> Unit) {
 fun BottomNavBar() {
     Box(
         modifier = Modifier
+            .navigationBarsPadding()
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 24.dp)
+            .padding(20.dp)
     ) {
         Surface(
             shape = RoundedCornerShape(28.dp),
@@ -265,27 +283,16 @@ fun NavItem(
     isSelected: Boolean,
     badgeCount: Int? = null
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable { }
-            .padding(horizontal = 4.dp, vertical = 2.dp)
-    ) {
-        Box {
-            Icon(
-                imageVector = ImageVector.vectorResource(id = iconRes),
-                contentDescription = label,
-                tint = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
-                modifier = Modifier.size(24.dp)
-            )
+    BadgedBox(
+        badge = {
             if (badgeCount != null) {
                 Box(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 12.dp, y = (-2).dp)
-                        .background(BadgeRed, CircleShape)
-                        .padding(horizontal = 4.dp, vertical = 1.dp)
+                        .background(
+                            color = BadgeRed,
+                            shape = CircleShape
+                        )
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = badgeCount.toString(),
@@ -296,14 +303,30 @@ fun NavItem(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = label,
-            fontSize = 10.sp,
-            color = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
-            fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
-        )
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .clickable { }
+                .padding(horizontal = 4.dp, vertical = 2.dp)
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(id = iconRes),
+                contentDescription = label,
+                tint = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = label,
+                fontSize = 10.sp,
+                color = if (isSelected) PurpleMain else Color(0xFF9E9E9E),
+                fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+            )
+        }
     }
+
 }
 
 @Preview(
