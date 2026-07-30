@@ -15,4 +15,9 @@
 
     <string name="hint_request_role">В списке выберите \"maksec_test\" и нажмите \"Установить по умолчанию\"</string>
     <string name="hint_request_overlay">Найдите \"maksec_test\" и включите тумблер \"Разрешить\"</string>
+    <string name="dial">Набор</string>
+    <string name="history">История</string>
+    <string name="contacts">Контакты</string>
+    <string name="enter_number">Набор номера</string>
+    <string name="to_call">Позвонить</string>
 </resources>

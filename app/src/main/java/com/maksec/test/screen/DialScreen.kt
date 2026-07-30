@@ -11,13 +11,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,20 +37,16 @@ val TabTextUnselected = Color(0xFF8E8E93)
 val DialNumberColor = Color(0xFF3A3A3C)
 val BadgeRed = Color(0xFFFF3B30)
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                DialScreen()
-            }
-        }
-    }
+enum class TypeDialScreen(val nameRes: Int) {
+    DIAL(R.string.dial), HISTORY(R.string.history), CONTACTS(R.string.contacts)
 }
 
 @Composable
-fun DialScreen() {
-    val enteredNumber = remember { mutableStateOf("89227246484") }
+fun DialScreen(
+    modifier: Modifier = Modifier
+) {
+    val enteredNumber = remember { mutableStateOf("") }
+    var currentTypeScreen by remember { mutableStateOf(TypeDialScreen.DIAL) }
 
     Scaffold(
         topBar = {
@@ -66,6 +65,9 @@ fun DialScreen() {
                 ) {
                     IconButton(
                         onClick = { },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = Color.Transparent,
+                        ),
                         modifier = Modifier
                             .align(Alignment.CenterStart)
                             .padding(start = 8.dp)
@@ -77,7 +79,7 @@ fun DialScreen() {
                         )
                     }
                     Text(
-                        text = "Набор номера",
+                        text = if (enteredNumber.value.isBlank())stringResource(R.string.to_call) else stringResource(R.string.enter_number),
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.Black
@@ -91,27 +93,30 @@ fun DialScreen() {
         containerColor = DarkBackground
     ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 15.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Tabs
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(64.dp)
                     .clip(RoundedCornerShape(24.dp))
                     .background(Color.White)
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                TabItem("Набор", isSelected = true, modifier = Modifier.weight(1f))
-                TabItem("История", isSelected = false, modifier = Modifier.weight(1f))
-                TabItem("Контакты", isSelected = false, modifier = Modifier.weight(1f))
+                TypeDialScreen.entries.forEach {
+                    TabItem(
+                        text = stringResource(it.nameRes),
+                        isSelected = currentTypeScreen == it,
+                        modifier = Modifier.weight(1f),
+                        onClick = { currentTypeScreen = it })
+                }
             }
 
             Spacer(modifier = Modifier.weight(0.5f))
@@ -168,24 +173,31 @@ fun DialScreen() {
                     color = Color.White
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun TabItem(text: String, isSelected: Boolean, modifier: Modifier = Modifier) {
+fun TabItem(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier
-            .fillMaxHeight()
             .clip(RoundedCornerShape(16.dp))
             .background(if (isSelected) Color.White else Color(0xFFF2F2F7))
             .then(
                 if (isSelected) Modifier.border(2.dp, PurpleMain, RoundedCornerShape(16.dp))
                 else Modifier
             )
-            .clickable { },
+            .padding(vertical = 10.dp)
+            .clickable {
+                onClick()
+            },
         contentAlignment = Alignment.Center
     ) {
         Text(
